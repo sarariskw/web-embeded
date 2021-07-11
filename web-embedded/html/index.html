@@ -1,0 +1,116 @@
+<html>
+
+<head>
+  <title>AP Setup</title>
+  <style>
+    body {
+      font-family: monospace;
+      font-size: 28px;
+    }
+    input{
+      width: 100%;
+      border: 1px solid blue;
+      border-radius: 5px;
+      font: inherit;
+      font-weight: bold;
+      color: blue;
+      outline: none;
+      display: block;
+    }
+    label{
+      font-weight: bold;
+
+    }
+    button{
+      width: 31%;
+      font: inherit;
+      border: 1px solid blue;
+      border-radius: 10px;
+      outline: none;
+    }
+    #button-group{
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <center>
+    <h1>AP Setup</h1>
+  </center>
+  
+  <div >
+    <label>SSID:</label>
+    <input type='input' id='ssid' placeholder='<ssid>'><br>
+    <label>PASS:</label>
+    <input type='input' id='pass' placeholder='<pass>'><br>
+  </div>
+  
+  <div id='button-group'>
+    <button id='submit'>Submit</button>
+    <button id='clear'>Clear</button>
+    <button id='reload'>Reload</button>
+  </div>
+  
+  <script type='text/javascript'>
+    document.getElementById('clear').onclick = function () {
+      document.getElementById('ssid').value = '';
+      document.getElementById('pass').value = '';
+    };
+    
+    
+    document.getElementById('reload').onclick = function(){
+      console.log('reload button is clicked...');  
+        
+      var xmlHttp = new XMLHttpRequest();
+      xmlHttp.onreadystatechange = function () {
+        if (xmlHttp.readyState == XMLHttpRequest.DONE) {
+          if (xmlHttp.status == 200) {
+            console.log(xmlHttp.responseText);
+            res = JSON.parse(xmlHttp.responseText);
+            document.getElementById('ssid').value = res.ssid;
+            document.getElementById('pass').value = res.pass;
+          } 
+          else {
+            console.log('fail');
+          }
+        } 
+        else {
+        }
+      };
+
+      xmlHttp.open('GET', '/apData');
+      xmlHttp.send();
+    };
+
+    document.getElementById('submit').onclick = function(){
+      console.log('submit button is clicked...');  
+        
+      var xmlHttp = new XMLHttpRequest();
+      xmlHttp.onreadystatechange = function () {
+        if (xmlHttp.readyState == XMLHttpRequest.DONE) {
+          if (xmlHttp.status == 200) {
+            alert('Success....');
+          } 
+          else {
+            alert('Fail....');
+          }
+        } 
+        else {
+        }
+      };
+
+      var data = JSON.stringify({
+        ssid: document.getElementById('ssid').value,
+        pass: document.getElementById('pass').value
+      });
+
+      xmlHttp.open('POST', '/apData');
+      xmlHttp.send(data);
+    };
+    
+    document.getElementById('reload').click();
+    
+  </script>
+</body>
+</html>
